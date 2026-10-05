@@ -1,0 +1,68 @@
+#!/bin/bash
+# Copyright (c) 2026 Robert August Vincent II <pillarsdotnet@gmail.com>
+# Co-author: Claude Code.
+#
+# Build unsigned node-braces source packages for the PPA, one per series in
+# ./bases, into OUTDIR.
+#
+# Usage: ./build-source OUTDIR [SERIES...]
+#
+# Each packaging directory holds Ubuntu's debian/ for one upstream version,
+# plus the CVE-2026-93687 patch. The orig tarballs are Ubuntu's own, fetched
+# from Launchpad by the version in the changelog, so the PPA's copy matches
+# the archive's byte for byte. The committed changelog's top entry names one
+# series; it is rewritten here for each series built from that directory.
+#
+# Needs curl, python3 and dpkg-dev. Sign the results with debsign and upload
+# them with dput.
+set -euo pipefail
+
+here="$(cd "$(dirname "$0")" && pwd)"
+outdir="$(realpath -m "${1:?usage: build-source OUTDIR [SERIES...]}")"
+shift
+wanted=" $* "
+mkdir -p "$outdir"
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+grep -v '^#' "$here/bases" | while read -r series release dir; do
+  [ "$wanted" = "  " ] || [[ "$wanted" == *" $series "* ]] || continue
+  read -r _ version _ <"$here/$dir/debian/changelog"
+  version="$(tr -d '()' <<<"$version")"
+  upstream="${version%-*}"
+  # 3.0.3+~3.0.5-1ppa1~ubuntu26.04.1 -> ...~ubuntu24.04.1 for noble, say.
+  version="${version%~ubuntu*}~ubuntu$release.1"
+
+  # Ubuntu's orig tarballs for this upstream version: the main one and the
+  # typesbraces component.
+  for url in $(curl -fsS "https://api.launchpad.net/devel/ubuntu/+archive/primary?ws.op=getPublishedSources&source_name=node-braces&exact_match=true" |
+    python3 -c '
+import json, sys
+up = sys.argv[1]
+for e in json.load(sys.stdin)["entries"]:
+    if e["source_package_version"].rsplit("-", 1)[0] == up:
+        print(e["self_link"])
+        break
+' "$upstream" | xargs -I{} curl -fsS "{}?ws.op=sourceFileUrls" |
+    python3 -c 'import json, sys; [print(u) for u in json.load(sys.stdin) if ".orig" in u]'); do
+    f="$work/$(basename "$url")"
+    [ -e "$f" ] || curl -fsSL -o "$f" "$url"
+  done
+  ls "$work/node-braces_$upstream.orig.tar.gz" >/dev/null
+
+  tree="$work/$series/node-braces-$upstream"
+  mkdir -p "$tree"
+  tar -xzf "$work/node-braces_$upstream.orig.tar.gz" -C "$tree" --strip-components=1
+  mkdir -p "$tree/typesbraces"
+  tar -xzf "$work/node-braces_$upstream.orig-typesbraces.tar.gz" -C "$tree/typesbraces" --strip-components=1
+  cp -a "$here/$dir/debian" "$tree/"
+  cp "$work"/node-braces_"$upstream".orig*.tar.gz "$work/$series/"
+  sed -i "1s/^node-braces ([^)]*) [a-z]*;/node-braces ($version) $series;/" "$tree/debian/changelog"
+
+  (cd "$tree" && dpkg-buildpackage -S -sa -d -nc -us -uc >"$work/$series.log" 2>&1) || {
+    cat "$work/$series.log" >&2
+    exit 1
+  }
+  cp "$work/$series"/node-braces_"$version"* "$work/$series"/node-braces_"$upstream".orig*.tar.gz "$outdir/"
+  echo "built $outdir/node-braces_${version}_source.changes" >&2
+done

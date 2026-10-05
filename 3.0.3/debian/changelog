@@ -1,0 +1,112 @@
+node-braces (3.0.3+~3.0.5-1ppa1~ubuntu26.04.1) resolute; urgency=high
+
+  * Limit brace nesting depth to 100 levels (CVE-2026-93687), from
+    micromatch/braces pull request 72 and its follow-ups, as tagged
+    v3.0.4-pillarsdotnet.2 in https://github.com/pillarsdotnet/braces.
+    Upstream closed the request unmerged and has released no fix.
+
+ -- Robert August Vincent II (Bob) <pillarsdotnet@gmail.com>  Mon, 05 Oct 2026 13:10:46 -0400
+
+node-braces (3.0.3+~3.0.5-1) unstable; urgency=medium
+
+  * Team upload
+  * Declare compliance with policy 4.7.2
+  * New upstream version (update typescript declarations)
+
+ -- Yadd <yadd@debian.org>  Mon, 07 Apr 2025 13:04:05 +0200
+
+node-braces (3.0.3+~3.0.4-1) unstable; urgency=medium
+
+  * Team upload
+  * Update lintian override info format in d/source/lintian-overrides
+    on line 2-16
+  * Set upstream metadata fields: Bug-Database, Bug-Submit, Repository-Browse
+  * Declare compliance with policy 4.7.0
+  * New upstream version 3.0.3+~3.0.4 (Closes: #1071632, CVE-2024-4068)
+  * Test: require node-fill-range >= 7.1.1
+
+ -- Yadd <yadd@debian.org>  Wed, 22 May 2024 09:56:10 +0400
+
+node-braces (3.0.2+~3.0.1-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Debian Janitor ]
+  * Remove constraints unnecessary since buster:
+    + Build-Depends: Drop versioned constraint on node-fill-range.
+
+  [ Yadd ]
+  * Update standards version to 4.6.0, no changes needed.
+  * Fix filenamemangle
+  * Mark test dependencies with <!nocheck>
+  * New upstream version 3.0.2+~3.0.1: updates @types/braces 3.0.1
+
+ -- Yadd <yadd@debian.org>  Sat, 13 Nov 2021 21:45:15 +0100
+
+node-braces (3.0.2+~3.0.0-1) unstable; urgency=medium
+
+  * Team upload
+
+  [ Debian Janitor ]
+  * Update renamed lintian tag names in lintian overrides.
+  * Set upstream metadata fields: Bug-Submit.
+  * Remove obsolete fields Contact, Name from debian/upstream/metadata (already
+    present in machine-readable debian/copyright).
+  * Update standards version to 4.5.0, no changes needed.
+
+  [ Xavier Guimard ]
+  * Bump debhelper compatibility level to 13
+  * Add "Rules-Requires-Root: no"
+  * Add types definitions and repack (Closes: #968969)
+  * New upstream version 3.0.2+~3.0.0
+
+ -- Xavier Guimard <yadd@debian.org>  Mon, 19 Oct 2020 10:23:28 +0200
+
+node-braces (3.0.2-2) unstable; urgency=medium
+
+  * Team upload
+  * Back to unstable after successful tests
+  * Bump debhelper compatibility level to 12
+  * Declare compliance with policy 4.4.0
+  * Switch install to pkg-js-tools
+
+ -- Xavier Guimard <yadd@debian.org>  Mon, 02 Sep 2019 06:54:27 +0200
+
+node-braces (3.0.2-1) experimental; urgency=medium
+
+  * Team upload.
+
+  [ Paolo Greppi ]
+  * Update Vcs fields for migration to https://salsa.debian.org/
+  * Standards-Version 4.3.0
+  * debhelper compat 11 and remove build-dep on dh-buildinfo
+  * Install examples
+  * New upstream version 2.3.1 (Closes: #927716, CVE-2018-1109)
+
+  [ Xavier Guimard ]
+  * Add upstream/metadata
+  * Remove components
+  * New upstream version 3.0.2
+  * Add base-path module for tests only
+  * Update debian/copyright
+  * Fix install
+  * Remove unneeded dependencies
+  * Update lintian-overrides
+  * Switch tests to pkg-js-tools
+
+ -- Xavier Guimard <yadd@debian.org>  Wed, 05 Jun 2019 22:29:48 +0200
+
+node-braces (2.0.2-2) unstable; urgency=medium
+
+  * Team upload
+  * Fix tests using upstream version (Closes: #884041)
+  * Standards-Version 4.1.2
+  * Section: javascript
+
+ -- Jérémy Lal <kapouer@melix.org>  Fri, 29 Dec 2017 15:33:23 +0100
+
+node-braces (2.0.2-1) unstable; urgency=low
+
+  * Initial release (Closes: #843018)
+
+ -- Sruthi Chandran <srud@disroot.org>  Thu, 03 Nov 2016 12:33:34 +0530

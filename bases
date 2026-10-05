@@ -1,0 +1,4 @@
+# series   Ubuntu release   packaging directory (holds debian/)
+noble      24.04            3.0.2
+resolute   26.04            3.0.3
+stonking   26.10            3.0.3

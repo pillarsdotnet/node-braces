@@ -1,0 +1,16 @@
+#False positives
+source-is-missing test/bash-expanded-ranges.js
+source-is-missing test/bash-spec.js
+source-is-missing test/multiples.js
+source-is-missing test/regression.js
+source-contains-prebuilt-javascript-object test/bash-expanded-ranges.js
+source-contains-prebuilt-javascript-object test/bash-spec.js
+source-contains-prebuilt-javascript-object test/multiples.js
+source-contains-prebuilt-javascript-object test/regression.js
+very-long-line-length-in-source-file .verb.md line 219 is 597 characters long (>512)
+very-long-line-length-in-source-file README.md line 1 is 633 characters long (>512)
+very-long-line-length-in-source-file debian/tests/modules/bash-path/README.md line 1 is 660 characters long (>512)
+very-long-line-length-in-source-file test/bash-expanded-ranges.js line 207 is 2136 characters long (>512)
+very-long-line-length-in-source-file test/bash-spec.js line 139 is 926 characters long (>512)
+very-long-line-length-in-source-file test/multiples.js line 46 is 3072 characters long (>512)
+very-long-line-length-in-source-file test/regression.js line 55 is 923 characters long (>512)

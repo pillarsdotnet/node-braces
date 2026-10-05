@@ -1,0 +1,1 @@
+NODE_PATH=debian/tests/modules mocha -R spec

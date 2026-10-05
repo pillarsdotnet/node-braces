@@ -1,0 +1,10 @@
+version=4
+opts=\
+dversionmangle=auto,\
+filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-braces-$1/ \
+ https://github.com/micromatch/braces/tags .*/archive/.*/v?([\d\.]+).tar.gz group
+
+# It is not recommended use npmregistry. Please investigate more.
+# Take a look at https://wiki.debian.org/debian/watch/
+opts="searchmode=plain,ctype=nodejs,component=typesbraces,pgpmode=none,filenamemangle=s/.*?(\d[\d\.-]*@ARCHIVE_EXT@)/node-types-braces-$1/" \
+ https://registry.npmjs.org/@types/braces https://registry.npmjs.org/@types/braces/-/braces-([\d\.]+)@ARCHIVE_EXT@ group
