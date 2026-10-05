@@ -2,7 +2,7 @@
 # Co-author: Claude Code.
 # Upload node-braces, Ubuntu's package plus the CVE-2026-93687 fix, to
 # ppa:pillarsdotnet/ppa for each series in ./bases, whenever a push to the
-# debian branch gives a series a version the PPA does not have yet.
+# main branch gives a series a version the PPA does not have yet.
 #
 # Needs these, all registered on the Launchpad account and used by this
 # repository alone:
@@ -15,7 +15,7 @@ name: Launchpad
 
 on:
   push:
-    branches: [debian]
+    branches: [main]
     # A push that changes nothing but documentation or CI uploads nothing.
     paths-ignore:
       - "**.md"
