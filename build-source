@@ -30,7 +30,7 @@ grep -v '^#' "$here/bases" | while read -r series release dir; do
   read -r _ version _ <"$here/$dir/debian/changelog"
   version="$(tr -d '()' <<<"$version")"
   upstream="${version%-*}"
-  # 3.0.3+~3.0.5-1ppa1~ubuntu26.04.1 -> ...~ubuntu24.04.1 for noble, say.
+  # 3.0.3+~3.0.5-1ubuntu0.1~ppa1~ubuntu26.04.1 -> ...~ubuntu24.04.1 for noble, say.
   version="${version%~ubuntu*}~ubuntu$release.1"
 
   # Ubuntu's orig tarballs for this upstream version: the main one and the

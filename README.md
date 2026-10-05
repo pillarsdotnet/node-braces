@@ -47,7 +47,7 @@ Then sign each `_source.changes` with `debsign` and upload it with `dput`.
 
 ## Versions
 
-`3.0.3+~3.0.5-1ppa1~ubuntu26.04.1` sorts just above Ubuntu's
+`3.0.3+~3.0.5-1ubuntu0.1~ppa1~ubuntu26.04.1` sorts just above Ubuntu's
 `3.0.3+~3.0.5-1`, so `apt` prefers it, and below any update Ubuntu makes
 (`-1ubuntu1`, `-1ubuntu0.1`, `-2`), so an official fix replaces it without
 anyone having to remove the PPA's copy. The catch is that any Ubuntu update

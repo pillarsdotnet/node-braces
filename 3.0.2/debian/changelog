@@ -1,4 +1,4 @@
-node-braces (3.0.2+~3.0.1-1ppa1~ubuntu24.04.1) noble; urgency=high
+node-braces (3.0.2+~3.0.1-1ubuntu0.1~ppa1~ubuntu24.04.1) noble; urgency=high
 
   * Limit brace nesting depth to 100 levels (CVE-2026-93687), from
     micromatch/braces pull request 72 and its follow-ups, as tagged
