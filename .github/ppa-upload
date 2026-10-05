@@ -1,0 +1,56 @@
+#!/bin/bash
+# Copyright (c) 2026 Robert August Vincent II <pillarsdotnet@gmail.com>
+# Co-author: Claude Code.
+#
+# Build the node-braces source packages with ./build-source, then sign and
+# upload every one whose version the PPA does not already have.
+#
+# Usage: .github/ppa-upload [--dry-run]
+#
+# Launchpad rejects a version it already holds, and says so by email, so a
+# push that leaves a series' changelog alone uploads nothing for that series.
+# A new upload needs a new revision in the committed changelog: ppa1 -> ppa2.
+#
+# Needs curl, python3, dpkg-dev, devscripts and dput, and, unless --dry-run,
+# DEBSIGN_KEYID naming a secret key in gpg that Launchpad knows. DPUT_TARGET
+# names the dput host; it defaults to the PPA by FTP.
+set -euo pipefail
+
+PPA_OWNER=pillarsdotnet
+PPA_NAME=ppa
+
+dry_run=false
+[ "${1:-}" = --dry-run ] && dry_run=true
+
+repo="$(cd "$(dirname "$0")/.." && pwd)"
+work="$(mktemp -d)"
+trap 'rm -rf "$work"' EXIT
+
+# Every node-braces version in the PPA, whatever its state.
+curl -fsS "https://api.launchpad.net/devel/~$PPA_OWNER/+archive/ubuntu/$PPA_NAME?ws.op=getPublishedSources&source_name=node-braces&exact_match=true&ws.size=300" |
+  python3 -c 'import json, sys; print("\n".join(e["source_package_version"] for e in json.load(sys.stdin)["entries"]))' \
+    >"$work/published"
+
+"$repo/build-source" "$work/out"
+
+failed=""
+for changes in "$work"/out/*_source.changes; do
+  version="$(basename "$changes" _source.changes)"
+  version="${version#node-braces_}"
+  if grep -qxF "$version" "$work/published"; then
+    echo "$version is already in the PPA; not uploading it again" >&2
+    continue
+  fi
+  if $dry_run; then
+    echo "would upload $version (dry run)" >&2
+    continue
+  fi
+  debsign -k"$DEBSIGN_KEYID" --no-re-sign "$changes"
+  # One series failing to upload should not hold back the others.
+  dput "${DPUT_TARGET:-ppa:$PPA_OWNER/$PPA_NAME}" "$changes" || failed="$failed $version"
+done
+
+if [ -n "$failed" ]; then
+  echo "upload failed for:$failed" >&2
+  exit 1
+fi
